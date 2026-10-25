@@ -15,6 +15,7 @@ Transforma cualquier dispositivo Linux (o PC Windows) en un Hub USB Virtual de a
 [![Licencia](https://img.shields.io/badge/licencia-Gratis%20Uso%20Personal%20y%20Gaming-blue?style=flat-square)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20(x64%20%26%20ARM64)-lightgrey?style=flat-square&logo=windows)](https://github.com/oscarlosu-lab/USBAnywhere)
 [![Comunidad Reddit](https://img.shields.io/badge/Reddit-r%2FUsbAnywhere-FF4500?style=flat-square&logo=reddit&logoColor=white)](https://www.reddit.com/r/UsbAnywhere/)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Apoyar%20Proyecto-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/oscarlosu)
 
 ---
 
@@ -183,6 +184,13 @@ Consulta el archivo [LICENSE](LICENSE) para ver los términos y condiciones lega
 | **[USBAnywhere Android](https://github.com/oscarlosu-lab/USBAnywhere-Android)** | 📱 Android y Android TV | Servidor USB/IP rootless, integración Sunshine y hápticos DualSense |
 | **[Web Oficial](https://oscarlosu-lab.github.io/USBAnywhere/)** | 🌍 Portal Web | Guías interactivas, documentación y centro de descargas |
 | **[Comunidad Reddit](https://www.reddit.com/r/UsbAnywhere/)** | 💬 r/UsbAnywhere | Soporte, debates, configuraciones de la comunidad y anuncios |
+| **[Apoyar en Ko-fi](https://ko-fi.com/oscarlosu)** | ☕ Comunidad | Apoya el hosting, pruebas de hardware y desarrollo libre |
+
+---
+
+## ☕ Apoya el Proyecto
+
+Si USBAnywhere te ha servido para tu simulador, streaming o taller maker sin cables por el suelo, considera [invitarnos a un café en Ko-fi](https://ko-fi.com/oscarlosu). Tu aportación apoya directamente los certificados de firma digital de drivers, nuevo hardware de prueba (SBCs, volantes, mandos) e infraestructura.
 
 ---
 
