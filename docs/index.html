@@ -179,6 +179,10 @@
           <span data-i18n="trust_arch">x64 & ARM64 Native</span>
         </div>
         <div class="flex items-center gap-2">
+          <i data-lucide="tv" class="w-4 h-4 text-emerald-400"></i>
+          <span>Android TV & Shield</span>
+        </div>
+        <div class="flex items-center gap-2">
           <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i>
           <span data-i18n="trust_wsk">Low-Latency WSK Engine</span>
         </div>
@@ -625,7 +629,7 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
         
         <!-- Package 1: Windows Installer -->
         <div class="p-6 rounded-2xl glass-panel border border-brand-500/40 relative glow-cyan flex flex-col justify-between">
@@ -636,12 +640,12 @@
             <div class="w-12 h-12 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center mb-4">
               <i data-lucide="shield-check" class="w-6 h-6"></i>
             </div>
-            <h3 class="text-lg font-bold text-white">Windows Client Setup</h3>
+            <h3 class="text-base font-bold text-white">Windows Client Setup</h3>
             <p class="text-xs text-slate-400 mt-1">Includes WHQL drivers auto-installer for Windows 10 & 11 (Intel / AMD x64).</p>
-            <div class="mt-4 text-xs font-mono text-slate-500">File: USBAnywhere-Setup-v3.0.0.exe</div>
+            <div class="mt-4 text-[11px] font-mono text-slate-500 truncate">USBAnywhere-Setup-v3.0.0.exe</div>
           </div>
           <div class="mt-6">
-            <a href="https://github.com/oscarlosu-lab/USBAnywhere/releases/download/v3.0.0/USBAnywhere-Setup-v3.0.0.exe" class="w-full py-3 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+            <a href="https://github.com/oscarlosu-lab/USBAnywhere/releases/download/v3.0.0/USBAnywhere-Setup-v3.0.0.exe" class="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
               <i data-lucide="download" class="w-4 h-4"></i>
               <span>Download (.exe)</span>
             </a>
@@ -654,12 +658,12 @@
             <div class="w-12 h-12 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center mb-4">
               <i data-lucide="archive" class="w-6 h-6"></i>
             </div>
-            <h3 class="text-lg font-bold text-white">Portable Client (x64)</h3>
+            <h3 class="text-base font-bold text-white">Portable Client (x64)</h3>
             <p class="text-xs text-slate-400 mt-1">Zero-install standalone package. Extract and run directly from USB flash drives.</p>
-            <div class="mt-4 text-xs font-mono text-slate-500">File: USBAnywhere-Portable-x64-v3.0.0.zip</div>
+            <div class="mt-4 text-[11px] font-mono text-slate-500 truncate">USBAnywhere-Portable-x64-v3.0.0.zip</div>
           </div>
           <div class="mt-6">
-            <a href="https://github.com/oscarlosu-lab/USBAnywhere/releases/download/v3.0.0/USBAnywhere-Portable-x64-v3.0.0.zip" class="w-full py-3 rounded-xl glass-panel hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+            <a href="https://github.com/oscarlosu-lab/USBAnywhere/releases/download/v3.0.0/USBAnywhere-Portable-x64-v3.0.0.zip" class="w-full py-2.5 rounded-xl glass-panel hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
               <i data-lucide="download" class="w-4 h-4"></i>
               <span>Download (.zip)</span>
             </a>
@@ -672,12 +676,12 @@
             <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center mb-4">
               <i data-lucide="cpu" class="w-6 h-6"></i>
             </div>
-            <h3 class="text-lg font-bold text-white">Portable Client (ARM64)</h3>
+            <h3 class="text-base font-bold text-white">Portable (ARM64)</h3>
             <p class="text-xs text-slate-400 mt-1">Native ARM64 for Snapdragon X Elite, Surface Pro, and Windows on ARM.</p>
-            <div class="mt-4 text-xs font-mono text-slate-500">File: USBAnywhere-Portable-arm64-v3.0.0.zip</div>
+            <div class="mt-4 text-[11px] font-mono text-slate-500 truncate">USBAnywhere-Portable-arm64-v3.0.0.zip</div>
           </div>
           <div class="mt-6">
-            <a href="https://github.com/oscarlosu-lab/USBAnywhere/releases/download/v3.0.0/USBAnywhere-Portable-arm64-v3.0.0.zip" class="w-full py-3 rounded-xl glass-panel hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+            <a href="https://github.com/oscarlosu-lab/USBAnywhere/releases/download/v3.0.0/USBAnywhere-Portable-arm64-v3.0.0.zip" class="w-full py-2.5 rounded-xl glass-panel hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
               <i data-lucide="download" class="w-4 h-4"></i>
               <span>Download (.zip)</span>
             </a>
@@ -690,14 +694,32 @@
             <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
               <i data-lucide="server" class="w-6 h-6"></i>
             </div>
-            <h3 class="text-lg font-bold text-white">Windows Server GUI</h3>
-            <p class="text-xs text-slate-400 mt-1">Share USB devices from any Windows machine across your network.</p>
-            <div class="mt-4 text-xs font-mono text-slate-500">Repo: USBAnywhere-Server</div>
+            <h3 class="text-base font-bold text-white">Windows Server GUI</h3>
+            <p class="text-xs text-slate-400 mt-1">Share USB devices from any Windows PC with .NET 9.0 GUI and tray mode.</p>
+            <div class="mt-4 text-[11px] font-mono text-slate-500 truncate">Repo: USBAnywhere-Server</div>
           </div>
           <div class="mt-6">
-            <a href="https://github.com/oscarlosu-lab/USBAnywhere-Server/releases/latest" target="_blank" rel="noopener" class="w-full py-3 rounded-xl glass-panel hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+            <a href="https://github.com/oscarlosu-lab/USBAnywhere-Server/releases/latest" target="_blank" rel="noopener" class="w-full py-2.5 rounded-xl glass-panel hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
               <i data-lucide="external-link" class="w-4 h-4"></i>
               <span>Server Releases</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Package 5: Android & Android TV -->
+        <div class="p-6 rounded-2xl glass-panel border border-teal-500/30 hover:border-teal-500/60 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center mb-4">
+              <i data-lucide="tv" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-base font-bold text-white">Android & TV</h3>
+            <p class="text-xs text-slate-400 mt-1">Rootless USB/IP engine for Android TV, Nvidia Shield & phones with Sunshine/Moonlight.</p>
+            <div class="mt-4 text-[11px] font-mono text-slate-500 truncate">Repo: USBAnywhere-Android</div>
+          </div>
+          <div class="mt-6">
+            <a href="https://github.com/oscarlosu-lab/USBAnywhere-Android" target="_blank" rel="noopener" class="w-full py-2.5 rounded-xl glass-panel hover:bg-slate-800 text-teal-300 border border-teal-600/50 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+              <span>Android Repo</span>
             </a>
           </div>
         </div>
@@ -758,6 +780,7 @@
         <a href="docs/VPN_INTERNET_EN.md" class="hover:text-slate-300 transition-colors">VPN Guide</a>
         <a href="https://github.com/oscarlosu-lab/USBAnywhere" class="hover:text-slate-300 transition-colors">Client Repo</a>
         <a href="https://github.com/oscarlosu-lab/USBAnywhere-Server" class="hover:text-slate-300 transition-colors">Server Repo</a>
+        <a href="https://github.com/oscarlosu-lab/USBAnywhere-Android" class="hover:text-slate-300 transition-colors">Android Repo</a>
         <a href="https://www.reddit.com/r/UsbAnywhere/" class="hover:text-slate-300 transition-colors">Reddit</a>
         <a href="LICENSE" class="hover:text-slate-300 transition-colors">License</a>
       </div>
