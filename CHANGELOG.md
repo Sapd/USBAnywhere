@@ -1,5 +1,37 @@
 # CHANGELOG - USBAnywhere
 
+## [3.0.1] - 2026-10-26
+
+### Security & Hardening (Zero-Trust Audit)
+- **Binary & DLL Integrity Gate (Findings C-01, F-04, A-02)**:
+  - Synchronized and cryptographically verified SHA-256 hashes in `UsbipService` and `UsbipBinaryIntegrityTests` for `usbipw.exe`, `devnode.exe`, companion DLLs (`libusbip.dll`, `resources.dll`), and drivers across x64 and ARM64.
+  - Implemented fail-closed execution gate blocking tampered or unverified native binaries and companion DLLs before launching sub-processes.
+  - Mitigated binary planting vectors (F-01, F-05) by binding `pnputil.exe`, `cmd.exe`, and `wt.exe` strictly to absolute System32 and WindowsApps paths.
+- **Linux & Container Security Hardening (Findings C-01, A-03, M-01, M-03)**:
+  - Hardened `scripts/install-server.sh` with strict bash modes (`set -euo pipefail`), `curl -fsSL`, and a safe auto-export policy excluding local HID (Class 03: keyboards/mice) and Mass Storage (Class 08: USB disks) by default via `/etc/default/usbanywhere`.
+  - Added root `.dockerignore` excluding 1.9 GB build caches, Git history, and `.env*` secrets from Docker daemon context.
+  - Fixed Dockerfile context to copy `scripts/install-server.sh` and added `docker/entrypoint.sh` enforcing the safe class policy in containers.
+- **Server Windows Hardening (Findings SW-01, SW-02)**:
+  - Restricted Windows Firewall rules for TCP port 3240 to `profile=private,domain` and `remoteip=localsubnet` or explicit subnet whitelists.
+  - Removed unused PIN configuration placeholder and bumped `Microsoft.NET.Test.Sdk` 17.12.0 for .NET 9 alignment.
+
+### Fixed & Improved
+- **Process & Lifecycle Robustness (Findings F-13, F-14, H-11, C-03)**:
+  - Added recursive process tree termination (`Kill(entireProcessTree: true)`) on timeouts to eliminate orphaned USB/IP child handles.
+  - Implemented non-blocking asynchronous driver status queries in `DriverService` eliminating UI startup freezes.
+  - Exact `(ServerIP, BusId)` matching during device disconnect to prevent ambiguous port detachments across identical IP subnets.
+  - Asynchronous graceful shutdown hooked into `OnClosing` and update flows, ensuring all active remote ports are cleanly detached.
+- **UX & Observability Enhancements (Findings F-11, H-06, H-07, H-14)**:
+  - Added Enter key shortcut on Server IP input field to trigger immediate server device enumeration.
+  - Integrated `FileLoggerProvider` connecting standard `ILogger` to rolling daily disk logs in `%LOCALAPPDATA%\USBAnywhere\logs`.
+  - Global unhandled exception handlers catching UI dispatcher, AppDomain, and unobserved task exceptions.
+  - Explicit error reporting when checking for updates instead of ambiguous "You have the latest version".
+- **Documentation & Packaging Parity (Findings F-18, B-06, M-09, M-10, M-11, C-02)**:
+  - Added `README_ARM64.md` documenting Test Signing (`bcdedit /set testsigning on`) requirements on Windows ARM64.
+  - Fixed 404 links and unified service names across English and Spanish documentation.
+  - Updated Scoop and WinGet manifests with v3.0.1 release URLs and SHA-256 hashes.
+  - Unified solution-wide versioning via `Directory.Build.props` (v3.0.1).
+
 ## [3.0.0] - 2026-10-24
 
 ### Added

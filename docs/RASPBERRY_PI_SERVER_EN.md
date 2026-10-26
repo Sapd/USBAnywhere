@@ -63,7 +63,10 @@ Should show `(attached)` next to the device.
 
 ## 🔄 Make Persistent (Autostart)
 
-### Option 1: Create systemd service
+### Option 1: 1-Click Auto-Installer (Recommended)
+If you used the 1-Click Installer (`install-server.sh`), `usbanywhere.service` and `usbanywhere-autobind.service` are **already installed and enabled automatically**.
+
+### Option 2: Create manual systemd service
 
 ```bash
 sudo nano /etc/systemd/system/usbipd.service
@@ -134,10 +137,10 @@ sudo usbip bind -b 1-1.4
 
 ### "Connection refused" from Windows
 ```bash
-# Verify daemon is running
-sudo systemctl status usbipd
+# Verify daemon is running (usbanywhere if 1-click installer, or usbipd if manual)
+sudo systemctl status usbanywhere 2>/dev/null || sudo systemctl status usbipd
 # Or verify process
-ps aux | grep usbipd
+ps aux | grep -E 'usbipd|usbanywhere'
 ```
 
 ## 🔌 Unshare Device
@@ -155,15 +158,19 @@ sudo usbip list -l
 # Active connections
 sudo usbip port
 
-# Logs
-journalctl -u usbipd -f
+# Logs (use usbanywhere for 1-click installer, or usbipd for manual service)
+journalctl -u usbanywhere -u usbipd -f
 ```
 
 ## 🔥 Firewall
 
-If you have an active firewall, open port 3240:
+If you have an active firewall (ufw), restrict port 3240 to your local subnet (recommended):
 ```bash
-sudo ufw allow 3240/tcp
+# Allow only from your local network (e.g., 192.168.1.0/24)
+sudo ufw allow from 192.168.1.0/24 to any port 3240 proto tcp comment 'USBAnywhere LAN'
+
+# Or open port 3240 globally if on an isolated/dedicated LAN:
+# sudo ufw allow 3240/tcp
 ```
 
 ---

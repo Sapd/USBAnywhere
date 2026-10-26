@@ -1028,6 +1028,15 @@ public partial class MainWindow : Window
 
     #region USBIP Operations
 
+    private void TxtServerIP_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Enter)
+        {
+            e.Handled = true;
+            BtnList_Click(sender, new RoutedEventArgs());
+        }
+    }
+
     private async void BtnList_Click(object sender, RoutedEventArgs e)
     {
         var servers = new List<string>();
@@ -1170,6 +1179,12 @@ public partial class MainWindow : Window
                         AddLog("Error", installResult.Error ?? _localization.GetText("log_update_failed", _currentLanguage));
                     }
                 }
+            }
+            else if (!string.IsNullOrEmpty(updateInfo.Error))
+            {
+                lblStatus.Text = $"❌ {_localization.GetText("log_update_failed", _currentLanguage)}: {updateInfo.Error}";
+                lblStatus.Foreground = (SolidColorBrush)FindResource("StatusError");
+                AddLog("Error", $"Update check failed: {updateInfo.Error}");
             }
             else
             {

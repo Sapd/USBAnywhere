@@ -4,7 +4,7 @@
 
 
 
-$version = "3.0.0"
+$version = "3.0.1"
 
 $repoRoot = $PSScriptRoot
 
@@ -286,9 +286,9 @@ if (Test-Path $iscc) {
 
     # Copy LICENSE and README to temp_x64 root for ISCC
 
-    Copy-Item "$repoRoot\LICENSE" "$releasePath\temp_x64\LICENSE" -Force
+    Copy-Item $licenseFile "$releasePath\temp_x64\LICENSE" -Force
 
-    Copy-Item "$repoRoot\README.md" "$releasePath\temp_x64\README.md" -Force
+    Copy-Item $readmeFile "$releasePath\temp_x64\README.md" -Force
 
     
 

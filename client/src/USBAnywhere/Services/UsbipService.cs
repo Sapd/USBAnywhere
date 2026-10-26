@@ -32,6 +32,15 @@ namespace USBAnywhere.Services
             "90663093D9E13795E567536328EC960D2AB5275F6342C5D3342CDF13E397E579"  // usbipw.exe / usbip.exe (ARM64 bundled)
         };
 
+        // Whitelist for companion native DLLs loaded in the usbip directory (anti-DLL planting)
+        internal static readonly HashSet<string> ValidDllHashes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "F123EF5D288B817A890CBE39A3C2D212B3D8B1765C691C8703CCB76C7337986C", // libusbip.dll (x64)
+            "593AE7551B53FF34E8EB6FA25CF8E00523606A9F9F8129F83C8EB94195A44F0B", // libusbip.dll (ARM64)
+            "4BFC862E5891D9B4C12A8EBD43D3BA871EBF94B65F7A00C22527C905949E0FFF", // resources.dll (x64)
+            "B9FF5A60212F7BDED02A16510EEE031C59C312A4A396AC2956478E6A32165928"  // resources.dll (ARM64)
+        };
+
         public UsbipService(
             ILogger<UsbipService> logger,
             IEnvironmentService envService,
@@ -300,7 +309,15 @@ namespace USBAnywhere.Services
                     else
                     {
                         _logger.LogWarning("Comando USBIP excedió el timeout de {Timeout}ms.", timeoutMs);
-                        try { process.Kill(); } catch (Exception kex) { _logger.LogDebug(kex, "No se pudo terminar el proceso usbip tras timeout"); }
+                        try 
+                        { 
+                            process.Kill(entireProcessTree: true); 
+                            process.WaitForExit(2000);
+                        } 
+                        catch (Exception kex) 
+                        { 
+                            _logger.LogDebug(kex, "No se pudo terminar el árbol de procesos usbip tras timeout"); 
+                        }
                         exitCode = -4;
                     }
                 }
@@ -342,15 +359,41 @@ namespace USBAnywhere.Services
             try
             {
                 using (var sha256 = SHA256.Create())
-                using (var stream = File.OpenRead(path))
                 {
-                    var hashBytes = sha256.ComputeHash(stream);
-                    var hash = BitConverter.ToString(hashBytes).Replace("-", "");
-                    
-                    if (ValidHashes.Contains(hash)) return true;
-                    
-                    _logger.LogCritical("SEGURIDAD: Hash de binario NO reconocido: {Hash} ({Path}). Ejecución bloqueada.", hash, path);
-                    return false;
+                    // 1. Validate the executable itself
+                    string exeHash;
+                    using (var stream = File.OpenRead(path))
+                    {
+                        var hashBytes = sha256.ComputeHash(stream);
+                        exeHash = BitConverter.ToString(hashBytes).Replace("-", "");
+                    }
+
+                    if (!ValidHashes.Contains(exeHash))
+                    {
+                        _logger.LogCritical("SEGURIDAD: Hash de ejecutable NO reconocido: {Hash} ({Path}). Ejecución bloqueada.", exeHash, path);
+                        return false;
+                    }
+
+                    // 2. Validate companion DLLs in the executable directory against DLL planting (F-04)
+                    var binDir = Path.GetDirectoryName(path);
+                    if (!string.IsNullOrEmpty(binDir) && Directory.Exists(binDir))
+                    {
+                        var dllFiles = Directory.GetFiles(binDir, "*.dll");
+                        foreach (var dll in dllFiles)
+                        {
+                            using var dllStream = File.OpenRead(dll);
+                            var dllBytes = sha256.ComputeHash(dllStream);
+                            var dllHash = BitConverter.ToString(dllBytes).Replace("-", "");
+
+                            if (!ValidDllHashes.Contains(dllHash))
+                            {
+                                _logger.LogCritical("SEGURIDAD: DLL no autorizada o manipulada detectada: {Dll} (Hash: {Hash}). Operación abortada.", dll, dllHash);
+                                return false;
+                            }
+                        }
+                    }
+
+                    return true;
                 }
             }
             catch (Exception ex)

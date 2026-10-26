@@ -16,25 +16,23 @@ public class UsbipBinaryIntegrityTests
         return BitConverter.ToString(bytes).Replace("-", "").ToUpperInvariant();
     }
 
+    private static string? FindFileUpwards(string relativePath)
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir != null)
+        {
+            var candidate = Path.Combine(dir.FullName, relativePath);
+            if (File.Exists(candidate))
+                return candidate;
+            dir = dir.Parent;
+        }
+        return null;
+    }
+
     [Fact]
     public void ValidHashes_Contains_Bundled_x64_UsbipBinary()
     {
-        // Locate Portable/usbipw.exe from solution root
-        var baseDir = AppContext.BaseDirectory;
-        // Search upwards for Portable directory
-        var dir = new DirectoryInfo(baseDir);
-        string? portablePath = null;
-        while (dir != null)
-        {
-            var candidate = Path.Combine(dir.FullName, "Portable", "usbipw.exe");
-            if (File.Exists(candidate))
-            {
-                portablePath = candidate;
-                break;
-            }
-            dir = dir.Parent;
-        }
-
+        var portablePath = FindFileUpwards(Path.Combine("Portable", "usbipw.exe"));
         Assert.NotNull(portablePath);
         var actualHash = CalculateSha256(portablePath);
 
@@ -44,24 +42,32 @@ public class UsbipBinaryIntegrityTests
     [Fact]
     public void ValidHashes_Contains_Bundled_ARM64_UsbipBinary_IfPresent()
     {
-        var baseDir = AppContext.BaseDirectory;
-        var dir = new DirectoryInfo(baseDir);
-        string? arm64Path = null;
-        while (dir != null)
-        {
-            var candidate = Path.Combine(dir.FullName, "Portable-ARM64", "usbipw.exe");
-            if (File.Exists(candidate))
-            {
-                arm64Path = candidate;
-                break;
-            }
-            dir = dir.Parent;
-        }
-
+        var arm64Path = FindFileUpwards(Path.Combine("Portable-ARM64", "usbipw.exe"));
         if (arm64Path != null)
         {
             var actualHash = CalculateSha256(arm64Path);
             Assert.Contains(actualHash, UsbipService.ValidHashes);
+        }
+    }
+
+    [Fact]
+    public void ValidDllHashes_Contains_Bundled_x64_LibusbipDll()
+    {
+        var dllPath = FindFileUpwards(Path.Combine("Portable", "libusbip.dll"));
+        Assert.NotNull(dllPath);
+        var actualHash = CalculateSha256(dllPath);
+
+        Assert.Contains(actualHash, UsbipService.ValidDllHashes);
+    }
+
+    [Fact]
+    public void ValidDllHashes_Contains_Bundled_ARM64_LibusbipDll_IfPresent()
+    {
+        var dllPath = FindFileUpwards(Path.Combine("Portable-ARM64", "libusbip.dll"));
+        if (dllPath != null)
+        {
+            var actualHash = CalculateSha256(dllPath);
+            Assert.Contains(actualHash, UsbipService.ValidDllHashes);
         }
     }
 
@@ -71,5 +77,6 @@ public class UsbipBinaryIntegrityTests
     public void ValidHashes_Rejects_Untrusted_Hashes(string untrustedHash)
     {
         Assert.DoesNotContain(untrustedHash, UsbipService.ValidHashes);
+        Assert.DoesNotContain(untrustedHash, UsbipService.ValidDllHashes);
     }
 }
