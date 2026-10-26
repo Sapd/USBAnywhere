@@ -718,8 +718,17 @@ public partial class MainWindow : Window
         nodeConnected.Header = $"☑️ {_localization.GetText("node_connected", _currentLanguage).Replace("☑️ ", "")} ({nodeConnected.Items.Count})";
     }
 
-    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    private bool _isShuttingDown = false;
+
+    protected override async void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
+        if (!_isShuttingDown)
+        {
+            e.Cancel = true;
+            await GracefulShutdownAsync();
+            return;
+        }
+
         if (_trayIcon != null)
         {
             _trayIcon.Visible = false;
@@ -752,6 +761,7 @@ public partial class MainWindow : Window
 
     private async Task GracefulShutdownAsync()
     {
+        _isShuttingDown = true;
         try
         {
             _connectionMonitor.Stop();

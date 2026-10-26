@@ -43,7 +43,12 @@ backups/
 temp_restore/
 _archive*/
 *_backup*
-Portable-*/
+# Audit reports (local only)
+AUDITORIA.md
+audit/
+
+# Portable-ARM64 is tracked for reproducible ARM64 releases
+!Portable-ARM64/
 
 # ---- Windows-generated driver cache / local app build ----
 *.PNF

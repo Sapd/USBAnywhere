@@ -26,9 +26,10 @@ namespace USBAnywhere.Services
 
         // Integrity check: SHA-256 of the bundled usbip-win client binaries, Portable/usbipw.exe == usbip.exe)
         // Any binary not listed here is NOT executed (fail-closed). Update when shipping a new usbip build.
-        private static readonly HashSet<string> ValidHashes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        internal static readonly HashSet<string> ValidHashes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "0A562A2339DB09144209C762E25B7E67211070C12E87C65089C072AFB8D71BDC" // usbipw.exe / usbip.exe (bundled)
+            "817DA219FA153B4B37C3BC1AA8FCC63F33E046188C57CC3DD2C60A6EF0883C56", // usbipw.exe / usbip.exe (x64 bundled)
+            "90663093D9E13795E567536328EC960D2AB5275F6342C5D3342CDF13E397E579"  // usbipw.exe / usbip.exe (ARM64 bundled)
         };
 
         public UsbipService(

@@ -6,11 +6,11 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/oscarlosu-lab/USBAnywhere/releases/download/v3.0.0/USBAnywhere-v3.0.0-x64.zip",
-            "hash": "5af335a86db9e1880b5481b489fa48aa6e71a7a8ab5f64ce3c669edd6baee03a"
+            "hash": "5f627086e9f519c8ada9d5d8ac5f6f2d96aa8d859fada9b695e75554c2e10bf5"
         },
         "arm64": {
             "url": "https://github.com/oscarlosu-lab/USBAnywhere/releases/download/v3.0.0/USBAnywhere-v3.0.0-arm64.zip",
-            "hash": "2f8d49683d13c85237b86e3473cbc32670bd03656305b47962a5e8828a9d9bc9"
+            "hash": "047955e2881053a5dfc7427fab46b604a03b339eba7c529e4aa401b21074c90f"
         }
     },
     "bin": "USBAnywhere.exe",

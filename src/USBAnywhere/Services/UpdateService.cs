@@ -267,10 +267,17 @@ public class UpdateService : IUpdateService
                     Verb = "runas"
                 });
                 
-                // Shutdown app if running in WPF context
+                // Request graceful shutdown via main window if running in WPF context
                 if (System.Windows.Application.Current != null)
                 {
-                    System.Windows.Application.Current.Shutdown();
+                    if (System.Windows.Application.Current.MainWindow != null)
+                    {
+                        System.Windows.Application.Current.MainWindow.Close();
+                    }
+                    else
+                    {
+                        System.Windows.Application.Current.Shutdown();
+                    }
                 }
                 
                 return OperationResult.Ok();

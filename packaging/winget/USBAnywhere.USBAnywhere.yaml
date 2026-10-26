@@ -22,6 +22,6 @@ Installers:
   - Architecture: x64
     InstallerType: inno
     InstallerUrl: https://github.com/oscarlosu-lab/USBAnywhere/releases/download/v3.0.0/USBAnywhere_Setup_v3.0.0.exe
-    InstallerSha256: D33367A0A054A5C9937A8FBF02D31BC6E5304FACF95F8C9B98C543D32107AC0C
+    InstallerSha256: 74A2346C2043CFB8C7A7E853B988E26AD976678796783393E91FB6EBB74C9262
 ManifestType: singleton
 ManifestVersion: 1.6.0

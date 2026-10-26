@@ -114,9 +114,9 @@ foreach ($file in $helpers) {
 
         Copy-Item $armSrc "$releasePath\temp_arm64\Portable\$file" -Force
 
-    } elseif (Test-Path $src) {
+    } else {
 
-        Copy-Item $src "$releasePath\temp_arm64\Portable\$file" -Force
+        throw "FATAL: Missing ARM64 helper binary: $armSrc. Cannot produce valid ARM64 package."
 
     }
 
@@ -142,9 +142,9 @@ if (Test-Path $arm64DriversPath) {
 
     Copy-Item $arm64DriversPath "$releasePath\temp_arm64\Portable\drivers" -Recurse -Force
 
-} elseif (Test-Path $x64DriversPath) {
+} else {
 
-    Copy-Item $x64DriversPath "$releasePath\temp_arm64\Portable\drivers" -Recurse -Force
+    throw "FATAL: Missing ARM64 drivers: $arm64DriversPath. Cannot produce valid ARM64 package."
 
 }
 
