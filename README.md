@@ -176,13 +176,30 @@ See [docs/RASPBERRY_PI_SERVER_EN.md](docs/RASPBERRY_PI_SERVER_EN.md) for complet
 
 ---
 
+## 📚 Documentation & Technical Manuals
+
+| Guide | Description | Language |
+|---|---|---|
+| **[System Architecture](docs/ARCHITECTURE_EN.md)** | Multiplatform ecosystem, USB/IP wire protocol & driver design | [English](docs/ARCHITECTURE_EN.md) · [Español](docs/ARCHITECTURE_ES.md) |
+| **[Security Policy](SECURITY.md)** | Zero-Trust defense, WHQL drivers & Authenticode validation | [English](SECURITY.md) · [Español](SECURITY_ES.md) |
+| **[Technical Roadmap](docs/ROADMAP_EN.md)** | Engineering milestones, active features & future releases | [English](docs/ROADMAP_EN.md) · [Español](docs/ROADMAP_MEJORAS.md) |
+| **[Windows Client Manual](docs/USAGE_EN.md)** | Comprehensive UI navigation, latency modes & shortcuts | [English](docs/USAGE_EN.md) · [Español](docs/USAGE_ES.md) |
+| **[Desktop Server Guide](server-windows/README.md)** | Unified Windows (.NET 9) & macOS (Swift) server suite | [English](server-windows/README.md) · [Español](server-windows/README_ES.md) |
+| **[macOS Server Manual](server-windows/docs/USAGE_MACOS_EN.md)** | Native Swift server setup for Apple Silicon M1-M4 & Intel | [English](server-windows/docs/USAGE_MACOS_EN.md) · [Español](server-windows/docs/USAGE_MACOS_ES.md) |
+| **[Raspberry Pi / Linux](docs/RASPBERRY_PI_SERVER_EN.md)** | 1-Click setup, systemd service & udev hotplug auto-export | [English](docs/RASPBERRY_PI_SERVER_EN.md) · [Español](docs/RASPBERRY_PI_SERVER_ES.md) |
+| **[Docker Server Guide](docker/README.md)** | Privileged container deployment & Docker Compose | [English](docker/README.md) · [Español](docker/README_ES.md) |
+| **[VPN & Internet Setup](docs/VPN_INTERNET_EN.md)** | Tailscale, ZeroTier & WireGuard remote gaming guide | [English](docs/VPN_INTERNET_EN.md) · [Español](docs/VPN_INTERNET_ES.md) |
+| **[Windows ARM64 Guide](docs/README_ARM64.md)** | Test-signing instructions for Snapdragon X Elite / Surface Pro | [English](docs/README_ARM64.md) |
+
+---
+
 ## 📁 Unified Monorepo Architecture
 
 ```text
 USBAnywhere/ (Unified Monorepo Suite)
 ├── client/                     # Windows 10/11 Client (.NET 9.0 WPF, WHQL Drivers & WSK Engine)
 │   ├── src/USBAnywhere/        # Client application source code
-│   ├── tests/                  # Client xUnit test suite (72 tests)
+│   ├── tests/                  # Client xUnit test suite (74 tests)
 │   ├── Portable/               # x64 portable binaries & WHQL drivers
 │   ├── Portable-ARM64/         # ARM64 portable binaries & WHQL drivers
 │   ├── installer/              # Inno Setup x64 installer script

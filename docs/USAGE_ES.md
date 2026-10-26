@@ -85,7 +85,37 @@ Abre el asistente SSH para Raspberry Pi / Linux. Incluye el botón **`⚡ 1-Clic
 Escanea tus redes privadas virtuales (**Tailscale**, **ZeroTier** y **WireGuard**), comprueba qué nodos tienen el puerto `3240` activo y permite añadirlos al árbol principal con un clic.
 Ver [VPN_INTERNET_ES.md](VPN_INTERNET_ES.md) para configuración completa.
 
-## Menú Contextual (Click Derecho)
+---
+
+## 🌐 Conexión a Servidores Multiplataforma
+
+El cliente USBAnywhere se conecta de forma transparente a cualquier servidor USB/IP del ecosistema:
+
+### 🍎 Conexión a un Servidor macOS
+1. En tu Mac (Apple Silicon o Intel), ejecuta el instalador 1-click en Terminal:
+   `ash
+   curl -fsSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere-Server/main/scripts/install-server-mac.sh | sudo bash
+   `
+2. En USBAnywhere Client, introduce la IP del Mac (ej. 192.168.1.50) y pulsa **📋 Listar**.
+3. Selecciona tu joystick, volante de SimRacing o mando y pulsa **▶️ Conectar**.
+4. Consulta el [Manual de macOS](https://github.com/oscarlosu-lab/USBAnywhere-Server/blob/main/docs/USAGE_MACOS_ES.md) para más opciones.
+
+### 🖥️ Conexión a un Servidor Windows de Escritorio
+1. Ejecuta USBAnywhere-Server.exe en el PC emisor y pulsa **📤 Compartir** en los dispositivos deseados.
+2. En USBAnywhere Client, pulsa **🔍 Escanear** para auto-descubrirlo, o escribe su IP y pulsa **📋 Listar**.
+3. Selecciona el dispositivo y pulsa **▶️ Conectar**.
+
+### 🐧 Conexión a un Servidor Linux / Raspberry Pi
+1. Utiliza el botón **⚡ Auto-Configurar 1-Click** en el asistente SSH, o ejecuta install-server.sh en el host.
+2. El servidor aparecerá automáticamente en el árbol de dispositivos con medición de latencia en tiempo real.
+
+### 📱 Conexión a un Servidor Android
+1. Abre la app USBAnywhere Android en tu móvil o Android TV.
+2. Introduce la IP del dispositivo Android en el cliente y pulsa **📋 Listar** para enlazar mandos o DACs.
+
+---
+
+## Menú Contextual (Clic Derecho)
 
 ```
 ┌───────────────────────────────────────────────┐
