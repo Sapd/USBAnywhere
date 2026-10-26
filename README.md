@@ -176,18 +176,23 @@ See [docs/RASPBERRY_PI_SERVER_EN.md](docs/RASPBERRY_PI_SERVER_EN.md) for complet
 
 ---
 
-## 📁 Structure
+## 📁 Unified Monorepo Architecture
 
 ```text
-USBAnywhere/
-├── USBAnywhere.exe     # Main application (.NET 9 WPF)
-├── usbipw.exe          # USB/IP client binary
-├── devnode.exe         # PnP UDE device node manager
-├── libusbip.dll        # USB/IP core library
-├── drivers/            # Microsoft WHQL-certified x64 drivers
-├── usb.ids             # USB vendor/product database (25,000+ entries)
-├── CleanDrivers.ps1    # Driver cleanup utility
-└── icon.ico            # Application icon
+USBAnywhere/ (Unified Monorepo Suite)
+├── client/                     # Windows 10/11 Client (.NET 9.0 WPF, WHQL Drivers & WSK Engine)
+│   ├── src/USBAnywhere/        # Client application source code
+│   ├── tests/                  # Client xUnit test suite (72 tests)
+│   ├── Portable/               # x64 portable binaries & WHQL drivers
+│   ├── Portable-ARM64/         # ARM64 portable binaries & WHQL drivers
+│   ├── installer/              # Inno Setup x64 installer script
+│   └── packaging/              # Winget & Scoop manifest definitions
+├── server-windows/             # Windows Server Submodule (.NET 9.0 WPF GUI, Auto-Bind & usbipd)
+├── server-android/             # Android Server Submodule (Kotlin, Jetpack Compose & Leanback TV)
+├── docs/                       # Official web portal (GitHub Pages) & technical guides
+├── scripts/                    # Automation scripts & Linux 1-click installer (install-server.sh)
+├── .github/                    # Unified CI/CD workflows & Ko-fi sponsorship
+└── USBAnywhere.sln             # Root .NET Solution (Builds Client + Server simultaneously)
 ```
 
 ---

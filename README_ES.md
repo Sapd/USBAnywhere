@@ -153,18 +153,23 @@ Ver [docs/VPN_INTERNET_ES.md](docs/VPN_INTERNET_ES.md) para la guía completa.
 
 ---
 
-## 📁 Estructura
+## 📁 Arquitectura Monorepo Unificada
 
 ```text
-USBAnywhere/
-├── USBAnywhere.exe     # Aplicación principal (.NET 9 WPF)
-├── usbipw.exe          # Binario cliente USB/IP
-├── devnode.exe         # Gestor de nodos PnP UDE
-├── libusbip.dll        # Librería core USB/IP
-├── drivers/            # Drivers USB/IP certificados WHQL (x64)
-├── usb.ids             # Base de datos USB (+25.000 dispositivos)
-├── CleanDrivers.ps1    # Utilidad de limpieza de drivers
-└── icon.ico            # Icono de la aplicación
+USBAnywhere/ (Suite Monorepo Unificada)
+├── client/                     # Cliente Windows 10/11 (.NET 9.0 WPF, Drivers WHQL y Motor WSK)
+│   ├── src/USBAnywhere/        # Código fuente del cliente
+│   ├── tests/                  # Suite de 72 pruebas unitarias xUnit
+│   ├── Portable/               # Binarios portables x64 y drivers WHQL
+│   ├── Portable-ARM64/         # Binarios portables ARM64 y drivers WHQL
+│   ├── installer/              # Script de instalador Inno Setup x64
+│   └── packaging/              # Manifiestos de instalación Winget y Scoop
+├── server-windows/             # Submódulo Servidor Windows (GUI WPF .NET 9.0, Auto-Bind y usbipd)
+├── server-android/             # Submódulo Servidor Android (Kotlin, Jetpack Compose y Leanback TV)
+├── docs/                       # Web oficial (GitHub Pages) y documentación técnica
+├── scripts/                    # Scripts de automatización e instalador Linux (install-server.sh)
+├── .github/                    # Workflows de CI/CD y patrocinio Ko-fi
+└── USBAnywhere.sln             # Solución .NET raíz (compila Cliente y Servidor simultáneamente)
 ```
 
 ---

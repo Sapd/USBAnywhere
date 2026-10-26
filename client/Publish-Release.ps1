@@ -151,14 +151,16 @@ if (Test-Path $arm64DriversPath) {
 
 
 # License and Readme
+$licenseFile = if (Test-Path "$repoRoot\LICENSE") { "$repoRoot\LICENSE" } else { "$repoRoot\..\LICENSE" }
+$readmeFile = if (Test-Path "$repoRoot\README.md") { "$repoRoot\README.md" } else { "$repoRoot\..\README.md" }
 
-Copy-Item "$repoRoot\LICENSE" "$releasePath\temp_x64\Portable\LICENSE" -Force
+Copy-Item $licenseFile "$releasePath\temp_x64\Portable\LICENSE" -Force
 
-Copy-Item "$repoRoot\README.md" "$releasePath\temp_x64\Portable\README.md" -Force
+Copy-Item $readmeFile "$releasePath\temp_x64\Portable\README.md" -Force
 
-Copy-Item "$repoRoot\LICENSE" "$releasePath\temp_arm64\Portable\LICENSE" -Force
+Copy-Item $licenseFile "$releasePath\temp_arm64\Portable\LICENSE" -Force
 
-Copy-Item "$repoRoot\README.md" "$releasePath\temp_arm64\Portable\README.md" -Force
+Copy-Item $readmeFile "$releasePath\temp_arm64\Portable\README.md" -Force
 
 
 
