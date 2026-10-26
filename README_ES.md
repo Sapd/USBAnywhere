@@ -128,14 +128,14 @@ Los drivers ARM64 son **test-signed**. Ver `README_ARM64.md` en el ZIP para inst
 
 **O ejecuta el Instalador Plug & Play de 1 Línea en tu Linux / Raspberry Pi:**
 ```bash
-curl -sSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash
 ```
 > 💡 **100% Plug & Play (¡Igual que VirtualHere!):** Instala `usbipd`, crea el servicio `systemd` y añade una **regla `udev` hotplug** que **auto-exporta automáticamente cualquier USB en cuanto lo enchufas a la Raspberry Pi/Linux**, sin necesidad de escribir `usbip bind` a mano.
 
 ### 🐳 Servidor Docker / HomeLab / NAS (`docker-compose.yml`)
 Despliega un servidor USB/IP Plug & Play en **Unraid, TrueNAS, Synology o Proxmox** usando [`docker/docker-compose.yml`](docker/docker-compose.yml):
 ```bash
-git clone https://github.com/oscarlosu-lab/USBAnywhere.git && cd USBAnywhere/docker && docker compose up -d
+git clone --recursive https://github.com/oscarlosu-lab/USBAnywhere.git && cd USBAnywhere/docker && docker compose up -d
 ```
 
 ### 🎮 Automatización CLI para Moonlight / Sunshine / Playnite
@@ -150,6 +150,29 @@ USBAnywhere.exe --minimized --connect 192.168.1.50 1-1.4
 3. Selecciona el servidor remoto y pulsa Conectar
 
 Ver [docs/VPN_INTERNET_ES.md](docs/VPN_INTERNET_ES.md) para la guía completa.
+
+---
+
+## 🐧 Configuración Manual del Servidor Linux (Opcional)
+
+Compatible con **cualquier dispositivo Linux** con puertos USB (Raspberry Pi, Orange Pi, Banana Pi, OpenWRT, CrealityBox, Debian/Ubuntu x86/ARM):
+
+**Debian / Ubuntu / Raspberry Pi OS:**
+```bash
+sudo apt update && sudo apt install -y usbip hwdata usbutils
+sudo modprobe usbip_host
+sudo usbipd -D
+sudo usbip list -l
+sudo usbip bind -b 1-1.4  # Sustituye por tu bus-id
+```
+
+**OpenWRT:**
+```bash
+opkg update && opkg install usbip-server kmod-usb-ohci
+usbipd -D
+```
+
+Ver [docs/RASPBERRY_PI_SERVER_EN.md](docs/RASPBERRY_PI_SERVER_EN.md) para la guía detallada.
 
 ---
 

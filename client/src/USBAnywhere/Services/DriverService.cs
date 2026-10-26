@@ -21,6 +21,13 @@ public class DriverService : IDriverService
         "686F7D053599DBC7E8DE0ED2AA215B2218538FADD923A2985FFB72F452F0B8B1", // v0.9.8.1 arm64
     };
     private const string UdeHardwareId = "ROOT\\USBIP_WIN2\\UDE";
+    private static readonly string PnputilPath = GetSystemPnputilPath();
+
+    private static string GetSystemPnputilPath()
+    {
+        var sysPath = Path.Combine(Environment.SystemDirectory, "pnputil.exe");
+        return File.Exists(sysPath) ? sysPath : "pnputil";
+    }
 
     private readonly IEnvironmentService _envService;
     private readonly ILogger<DriverService> _logger;
@@ -63,7 +70,7 @@ public class DriverService : IDriverService
             // 1. Check active connected USB devices: look for USBip 3.X Emulated Host Controller or ROOT\USBIP_WIN2
             var devInfo = new ProcessStartInfo
             {
-                FileName = "pnputil",
+                FileName = PnputilPath,
                 Arguments = "/enum-devices /class USB /connected",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
@@ -73,21 +80,27 @@ public class DriverService : IDriverService
             using var devProc = Process.Start(devInfo);
             if (devProc != null)
             {
-                var devOut = devProc.StandardOutput.ReadToEnd();
-                devProc.WaitForExit(10000);
-
-                bool isDeviceActive = Regex.IsMatch(devOut, @"USBip\s+3\.X\s+Emulated\s+Host\s+Controller|ROOT\\USBIP_WIN2", RegexOptions.IgnoreCase);
-                if (isDeviceActive)
+                var devTask = devProc.StandardOutput.ReadToEndAsync();
+                if (devProc.WaitForExit(10000))
                 {
-                    _logger.LogDebug("Dispositivo emulador USB/IP detectado y activo en el árbol PnP.");
-                    return new DriverStatus { Installed = true, Status = "INSTALADO" };
+                    var devOut = devTask.GetAwaiter().GetResult();
+                    bool isDeviceActive = Regex.IsMatch(devOut, @"USBip\s+3\.X\s+Emulated\s+Host\s+Controller|ROOT\\USBIP_WIN2", RegexOptions.IgnoreCase);
+                    if (isDeviceActive)
+                    {
+                        _logger.LogDebug("Dispositivo emulador USB/IP detectado y activo en el árbol PnP.");
+                        return new DriverStatus { Installed = true, Status = "INSTALADO" };
+                    }
+                }
+                else
+                {
+                    try { devProc.Kill(true); } catch { }
                 }
             }
 
             // 2. Check DriverStore: look if driver package is at least staged
             var drvInfo = new ProcessStartInfo
             {
-                FileName = "pnputil",
+                FileName = PnputilPath,
                 Arguments = "/enum-drivers",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
@@ -97,14 +110,20 @@ public class DriverService : IDriverService
             using var drvProc = Process.Start(drvInfo);
             if (drvProc != null)
             {
-                var drvOut = drvProc.StandardOutput.ReadToEnd();
-                drvProc.WaitForExit(10000);
-
-                bool isStaged = Regex.IsMatch(drvOut, @"usbip2_ude|usbip_vhci|usbip-win|USBIP-WIN2", RegexOptions.IgnoreCase);
-                if (isStaged)
+                var drvTask = drvProc.StandardOutput.ReadToEndAsync();
+                if (drvProc.WaitForExit(10000))
                 {
-                    _logger.LogWarning("Drivers presentes en DriverStore pero dispositivo UDE no instanciado.");
-                    return new DriverStatus { Installed = true, Status = "INSTALADO" };
+                    var drvOut = drvTask.GetAwaiter().GetResult();
+                    bool isStaged = Regex.IsMatch(drvOut, @"usbip2_ude|usbip_vhci|usbip-win|USBIP-WIN2", RegexOptions.IgnoreCase);
+                    if (isStaged)
+                    {
+                        _logger.LogWarning("Drivers presentes en DriverStore pero dispositivo UDE no instanciado.");
+                        return new DriverStatus { Installed = true, Status = "INSTALADO" };
+                    }
+                }
+                else
+                {
+                    try { drvProc.Kill(true); } catch { }
                 }
             }
 
@@ -137,7 +156,7 @@ public class DriverService : IDriverService
             {
                 progress?.Report("Instalando filtro de drivers USB/IP (usbip2_filter)...");
                 _logger.LogInformation("Instalando driver de filtro: {Inf}", filterInf);
-                var filterRes = await RunProcessAsync("pnputil", $"/add-driver \"{filterInf}\" /install");
+                var filterRes = await RunProcessAsync(PnputilPath, $"/add-driver \"{filterInf}\" /install");
                 if (!filterRes.Success && filterRes.Error != "Reinicio requerido")
                 {
                     _logger.LogWarning("Aviso en usbip2_filter: {Err}", filterRes.Error);
@@ -163,13 +182,13 @@ public class DriverService : IDriverService
                     if (!devnodeRes.Success)
                     {
                         _logger.LogWarning("devnode.exe retornó código no cero: {Err}. Intentando fallback pnputil...", devnodeRes.Error);
-                        await RunProcessAsync("pnputil", $"/add-driver \"{udeInf}\" /install");
+                        await RunProcessAsync(PnputilPath, $"/add-driver \"{udeInf}\" /install");
                     }
                 }
                 else
                 {
                     _logger.LogInformation("devnode.exe no disponible. Usando pnputil /add-driver...");
-                    var udeRes = await RunProcessAsync("pnputil", $"/add-driver \"{udeInf}\" /install");
+                    var udeRes = await RunProcessAsync(PnputilPath, $"/add-driver \"{udeInf}\" /install");
                     if (!udeRes.Success && udeRes.Error != "Reinicio requerido")
                     {
                         return udeRes;
@@ -183,7 +202,7 @@ public class DriverService : IDriverService
                 foreach (var inf in otherInfs)
                 {
                     progress?.Report($"Instalando: {Path.GetFileName(inf)}...");
-                    var res = await RunProcessAsync("pnputil", $"/add-driver \"{inf}\" /install");
+                    var res = await RunProcessAsync(PnputilPath, $"/add-driver \"{inf}\" /install");
                     if (!res.Success && res.Error != "Reinicio requerido") return res;
                 }
             }
@@ -218,7 +237,7 @@ public class DriverService : IDriverService
             progress?.Report("Enumerando drivers en DriverStore...");
             var psi = new ProcessStartInfo
             {
-                FileName = "pnputil",
+                FileName = PnputilPath,
                 Arguments = "/enum-drivers",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
@@ -250,11 +269,11 @@ public class DriverService : IDriverService
             {
                 progress?.Report($"Removiendo {driver}...");
                 _logger.LogInformation("Ejecutando delete-driver /uninstall para {Driver}", driver);
-                var result = await RunProcessAsync("pnputil", $"/delete-driver {driver} /uninstall");
+                var result = await RunProcessAsync(PnputilPath, $"/delete-driver {driver} /uninstall");
                 if (!result.Success)
                 {
                     _logger.LogInformation("Reintentando delete-driver /force para {Driver}", driver);
-                    result = await RunProcessAsync("pnputil", $"/delete-driver {driver} /force");
+                    result = await RunProcessAsync(PnputilPath, $"/delete-driver {driver} /force");
                     if (!result.Success)
                     {
                         _logger.LogWarning("Aviso al remover {Driver}: {Error}", driver, result.Error);

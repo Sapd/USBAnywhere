@@ -23,6 +23,30 @@ public partial class App : System.Windows.Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        // ── STEP 0: Global Unhandled Exception Handlers ──────────────────
+        DispatcherUnhandledException += (s, args) =>
+        {
+            var logger = ServiceProvider?.GetService<ILoggerService>();
+            logger?.Error("Unhandled Dispatcher Exception", args.Exception);
+            args.Handled = true;
+        };
+
+        AppDomain.CurrentDomain.UnhandledException += (s, args) =>
+        {
+            var logger = ServiceProvider?.GetService<ILoggerService>();
+            if (args.ExceptionObject is Exception ex)
+            {
+                logger?.Error("Unhandled AppDomain Exception", ex);
+            }
+        };
+
+        TaskScheduler.UnobservedTaskException += (s, args) =>
+        {
+            var logger = ServiceProvider?.GetService<ILoggerService>();
+            logger?.Error("Unobserved Task Exception", args.Exception);
+            args.SetObserved();
+        };
+
         try
         {
             // ── STEP 1: Auto-elevate if not admin ──────────────────────────
@@ -106,13 +130,19 @@ public partial class App : System.Windows.Application
 
     private static void ConfigureServices(IServiceCollection services)
     {
-        // Microsoft.Extensions.Logging
-        services.AddLogging(b => b.AddConsole().SetMinimumLevel(LogLevel.Debug));
-
         // Core infrastructure
         services.AddSingleton<IEnvironmentService, EnvironmentService>();
         services.AddSingleton<ILoggerService, LoggerService>();
         services.AddSingleton<IConfigService, ConfigService>();
+
+        // Microsoft.Extensions.Logging (bridged to file logger for WinExe mode)
+        services.AddSingleton<ILoggerProvider, FileLoggerProvider>();
+        services.AddLogging(b =>
+        {
+            b.AddConsole();
+            b.Services.AddSingleton<ILoggerProvider, FileLoggerProvider>();
+            b.SetMinimumLevel(LogLevel.Information);
+        });
 
         // Domain services
         services.AddSingleton<IUsbipService, UsbipService>();

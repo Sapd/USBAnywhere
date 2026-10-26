@@ -240,7 +240,7 @@
         <div class="p-6 font-mono text-sm leading-relaxed overflow-x-auto text-slate-200">
           <div class="flex items-center gap-2 text-brand-400">
             <span class="text-slate-500 select-none">$</span>
-            <span class="select-all font-semibold">curl -sSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash</span>
+            <span class="select-all font-semibold">curl -fsSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash</span>
           </div>
           <div class="mt-4 text-xs text-slate-400 space-y-1">
             <p class="text-slate-500">[*] Step 1/4: Installing USB/IP kernel packages (usbip, hwdata, usbutils)...</p>
@@ -786,14 +786,14 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-6">
-        <a href="docs/USAGE_EN.md" class="hover:text-slate-300 transition-colors">Documentation</a>
-        <a href="docs/VPN_INTERNET_EN.md" class="hover:text-slate-300 transition-colors">VPN Guide</a>
+        <a href="https://github.com/oscarlosu-lab/USBAnywhere/blob/main/docs/USAGE_EN.md" class="hover:text-slate-300 transition-colors">Documentation</a>
+        <a href="https://github.com/oscarlosu-lab/USBAnywhere/blob/main/docs/VPN_INTERNET_EN.md" class="hover:text-slate-300 transition-colors">VPN Guide</a>
         <a href="https://github.com/oscarlosu-lab/USBAnywhere" class="hover:text-slate-300 transition-colors">Client Repo</a>
         <a href="https://github.com/oscarlosu-lab/USBAnywhere-Server" class="hover:text-slate-300 transition-colors">Server Repo</a>
         <a href="https://github.com/oscarlosu-lab/USBAnywhere-Android" class="hover:text-slate-300 transition-colors">Android Repo</a>
         <a href="https://www.reddit.com/r/UsbAnywhere/" class="hover:text-slate-300 transition-colors">Reddit</a>
         <a href="https://ko-fi.com/oscarlosu" target="_blank" rel="noopener" class="hover:text-rose-400 text-rose-400/90 font-semibold transition-colors flex items-center gap-1.5"><i data-lucide="coffee" class="w-3.5 h-3.5 text-rose-400"></i> Ko-fi</a>
-        <a href="LICENSE" class="hover:text-slate-300 transition-colors">License</a>
+        <a href="https://github.com/oscarlosu-lab/USBAnywhere/blob/main/LICENSE" class="hover:text-slate-300 transition-colors">License</a>
       </div>
 
       <div class="text-slate-600">
@@ -811,7 +811,7 @@
     // 1-Click Copy Terminal Button
     const copyCurlBtn = document.getElementById('copy-curl-btn');
     const copyCurlLabel = document.getElementById('copy-curl-label');
-    const curlCommand = "curl -sSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash";
+    const curlCommand = "curl -fsSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash";
 
     copyCurlBtn.addEventListener('click', async () => {
       try {

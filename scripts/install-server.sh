@@ -4,23 +4,22 @@
 # https://github.com/oscarlosu-lab/USBAnywhere
 #
 # Usage:
-#   curl -sSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash
+#   curl -fsSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash
 #
 # Features:
 #   1. Installs usbip, hwdata, and usbutils across Debian/Ubuntu/PiOS/Fedora/Arch
 #   2. Loads usbip_core & usbip_host kernel modules persistently across reboots
-#   3. Creates a systemd service (usbanywhere-server.service) running usbipd
-#   4. Sets up a udev rule + auto-bind helper so any USB device plugged into the
-#      server is automatically exported to Windows (100% Plug & Play like VirtualHere!)
+#   3. Creates a systemd service (usbanywhere.service) running usbipd
+#   4. Sets up a udev rule + auto-bind helper with configurable safe security policy
 # ==============================================================================
 
-set -e
+set -euo pipefail
 
 echo "================================================================"
 echo " 🌐 USBAnywhere Server Installer (Plug & Play Edition)"
 echo "================================================================"
 
-if [ "$EUID" -ne 0 ]; then
+if [ "${EUID:-$(id -u)}" -ne 0 ]; then
     echo "❌ Please run as root (use sudo)."
     exit 1
 fi
@@ -29,18 +28,18 @@ fi
 echo "[1/4] Installing USB/IP packages..."
 if command -v apt-get >/dev/null 2>&1; then
     export DEBIAN_FRONTEND=noninteractive
-    apt-get update -qq
+    apt-get update -qq || true
     # Try standard Debian/Armbian/Raspbian 'usbip' package first; fallback to Ubuntu 'linux-tools'
-    if ! apt-get install -y usbip hwdata usbutils 2>/dev/null; then
-        apt-get install -y "linux-tools-$(uname -r)" hwdata usbutils 2>/dev/null || \
-        apt-get install -y linux-tools-generic linux-tools-common hwdata usbutils
+    if ! apt-get install -y --no-install-recommends usbip hwdata usbutils 2>/dev/null; then
+        apt-get install -y --no-install-recommends "linux-tools-$(uname -r)" hwdata usbutils 2>/dev/null || \
+        apt-get install -y --no-install-recommends linux-tools-generic linux-tools-common hwdata usbutils 2>/dev/null || true
     fi
 elif command -v dnf >/dev/null 2>&1; then
-    dnf install -y usbip hwdata usbutils
+    dnf install -y usbip hwdata usbutils || true
 elif command -v pacman >/dev/null 2>&1; then
-    pacman -Sy --noconfirm usbip hwdata usbutils
+    pacman -Sy --noconfirm usbip hwdata usbutils || true
 elif command -v opkg >/dev/null 2>&1; then
-    opkg update && opkg install usbip-server kmod-usb-ohci usbutils
+    opkg update && opkg install usbip-server kmod-usb-ohci usbutils || true
 else
     echo "⚠️ Unsupported package manager. Ensure 'usbip' and 'usbipd' are installed."
 fi
@@ -48,37 +47,55 @@ fi
 # On Ubuntu with custom SBC kernels (Armbian/OrangePi/RPi), /usr/bin/usbip wrapper may fail
 # looking for /usr/lib/linux-tools/$(uname -r)/usbip. Link the actual binary if needed.
 if ! usbip version >/dev/null 2>&1; then
-    REAL_USBIP=$(find /usr/lib/linux-tools -name usbip -type f -executable 2>/dev/null | tail -n 1 || true)
-    REAL_USBIPD=$(find /usr/lib/linux-tools -name usbipd -type f -executable 2>/dev/null | tail -n 1 || true)
-    if [ -n "$REAL_USBIP" ] && [ -n "$REAL_USBIPD" ]; then
+    actual_usbip=$(find /usr/lib/linux-tools -name usbip -type f 2>/dev/null | sort -V | tail -n 1 || true)
+    if [ -n "$actual_usbip" ]; then
+        echo "Linking $actual_usbip to /usr/local/sbin/usbip..."
         mkdir -p /usr/local/sbin
-        ln -sf "$REAL_USBIP" /usr/local/sbin/usbip
-        ln -sf "$REAL_USBIPD" /usr/local/sbin/usbipd
+        ln -sf "$actual_usbip" /usr/local/sbin/usbip
+        actual_usbipd=$(dirname "$actual_usbip")/usbipd
+        [ -f "$actual_usbipd" ] && ln -sf "$actual_usbipd" /usr/local/sbin/usbipd
     fi
 fi
 
-# 2. Load Kernel Modules Persistently
-echo "[2/4] Enabling kernel modules (usbip_core, usbip_host)..."
-modprobe usbip-core 2>/dev/null || modprobe usbip_core 2>/dev/null || true
-if ! modprobe usbip_host 2>/dev/null && [ ! -d /sys/bus/usb/drivers/usbip-host ]; then
-    echo "⚠️ Warning: Could not load 'usbip_host' for running kernel $(uname -r)."
-    if [ ! -d "/lib/modules/$(uname -r)" ]; then
-        echo "   Kernel was updated on disk. Please run 'sudo reboot' after this script finishes."
-    fi
-fi
+# 2. Persist USB/IP kernel modules across reboots
+echo "[2/4] Enabling USB/IP kernel modules..."
+modprobe usbip_core 2>/dev/null || true
+modprobe usbip_host 2>/dev/null || true
 
 mkdir -p /etc/modules-load.d
 cat << 'EOF' > /etc/modules-load.d/usbanywhere.conf
-usbip-core
+usbip_core
 usbip_host
 EOF
 
-# 3. Create Auto-Bind Helper Script (Excludes USB Hubs, Root Disk & Network Adapters)
-echo "[3/4] Installing Plug & Play Auto-Bind script..."
+# 3. Create Default Configuration File (Safe Auto-Export Policy)
+mkdir -p /etc/default
+if [ ! -f /etc/default/usbanywhere ]; then
+    cat << 'EOF' > /etc/default/usbanywhere
+# ==============================================================================
+# USBAnywhere Server — Auto-Export Security Policy
+# ==============================================================================
+# Set to "true" to automatically export keyboards and mice (HID Class 03).
+# Default: false (protects host console from unauthorized remote capture).
+ALLOW_HID="false"
+
+# Set to "true" to automatically export USB flash drives and storage (Class 08).
+# Default: false (prevents unauthorized remote mounting of host disks).
+ALLOW_STORAGE="false"
+EOF
+fi
+
+# 4. Create Plug & Play Auto-Bind Helper Script
+echo "[3/4] Installing Plug & Play auto-bind watcher..."
 cat << 'EOF' > /usr/local/bin/usbanywhere-autobind.sh
 #!/usr/bin/env bash
-# Auto-binds all external USB devices while safely skipping root hubs, root/boot disk, and NICs
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Load policy config
+[ -f /etc/default/usbanywhere ] && . /etc/default/usbanywhere
+
+ALLOW_HID="${ALLOW_HID:-false}"
+ALLOW_STORAGE="${ALLOW_STORAGE:-false}"
 
 USBIP_BIN=$(command -v usbip || echo "/usr/sbin/usbip")
 LOCK_FILE="/run/usbanywhere-autobind.lock"
@@ -108,6 +125,16 @@ bind_all_usb() {
             # Skip USB Hubs (Class 09)
             [[ "$bDeviceClass" == "09" ]] && continue
 
+            # Skip pure HID devices (Keyboards/Mice - Class 03) by default unless ALLOW_HID=true
+            if [[ "$ALLOW_HID" != "true" && "$bDeviceClass" == "03" ]]; then
+                continue
+            fi
+
+            # Skip Mass Storage (Class 08) by default unless ALLOW_STORAGE=true
+            if [[ "$ALLOW_STORAGE" != "true" && "$bDeviceClass" == "08" ]]; then
+                continue
+            fi
+
             # Skip Raspberry Pi onboard SMSC/Microchip USB Ethernet bridges
             [[ "$idVendor:$idProduct" == "0424:ec00" ]] && continue
             [[ "$idVendor:$idProduct" == "0424:7800" ]] && continue
@@ -117,7 +144,7 @@ bind_all_usb() {
                 continue
             fi
 
-            # Skip ONLY USB storage devices that back the running root (/) filesystem
+            # Skip USB storage devices that back the running root (/) filesystem
             skip_root=0
             for blk in "$devpath"/*/host*/target*/*/block/* "$devpath"/*/block/*; do
                 [ -e "$blk" ] || continue
@@ -161,9 +188,9 @@ else
     bind_all_usb
 fi
 EOF
-chmod +x /usr/local/bin/usbanywhere-autobind.sh
+chmod 755 /usr/local/bin/usbanywhere-autobind.sh
 
-# 4. Configure systemd services & udev hotplug rule
+# 5. Configure systemd services & udev hotplug rule
 echo "[4/4] Configuring systemd daemons and udev hotplug rules..."
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 if command -v systemctl >/dev/null 2>&1; then
@@ -217,9 +244,13 @@ fi
 
 IP_ADDR=$(hostname -I 2>/dev/null | awk '{print $1}')
 echo ""
-echo "✅ USBAnywhere Server is active and running on port 3240!"
+echo "✅ USBAnywhere Server is active and listening on port 3240!"
 echo "📡 Server IP: ${IP_ADDR:-<your-server-ip>}"
-echo "🔌 Plug & Play Auto-Export is ENABLED: any USB device plugged in is shared automatically."
-echo "----------------------------------------------------------------"
-usbip list -l 2>/dev/null || true
+echo "🛡️ Safe Auto-Export policy active: /etc/default/usbanywhere"
+echo "   (HID keyboards/mice and USB disks are protected from accidental exposure)."
+if command -v ufw >/dev/null 2>&1 && ufw status 2>/dev/null | grep -qw "active"; then
+    echo "🔒 Firewall Notice (ufw is active):"
+    echo "   To restrict port 3240 to your local subnet (recommended):"
+    echo "   sudo ufw allow from ${IP_ADDR%.*}.0/24 to any port 3240 proto tcp comment 'USBAnywhere LAN'"
+fi
 echo "================================================================"

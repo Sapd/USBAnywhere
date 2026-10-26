@@ -74,11 +74,12 @@ public partial class SshDialog : Window
         {
             // Try Windows Terminal first, then cmd
             var wtPath = Environment.GetEnvironmentVariable("LOCALAPPDATA") + @"\Microsoft\WindowsApps\wt.exe";
+            var cmdPath = Path.Combine(Environment.SystemDirectory, "cmd.exe");
             if (File.Exists(wtPath))
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "wt.exe",
+                    FileName = wtPath,
                     Arguments = $"new-tab ssh {user}@{ip}",
                     UseShellExecute = true
                 });
@@ -87,7 +88,7 @@ public partial class SshDialog : Window
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "cmd.exe",
+                    FileName = File.Exists(cmdPath) ? cmdPath : "cmd.exe",
                     Arguments = $"/k ssh {user}@{ip}",
                     UseShellExecute = true
                 });
@@ -133,11 +134,12 @@ public partial class SshDialog : Window
         try
         {
             var wtPath = Environment.GetEnvironmentVariable("LOCALAPPDATA") + @"\Microsoft\WindowsApps\wt.exe";
+            var cmdPath = Path.Combine(Environment.SystemDirectory, "cmd.exe");
             if (File.Exists(wtPath))
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "wt.exe",
+                    FileName = wtPath,
                     Arguments = $"new-tab ssh -t {user}@{ip} \"{remoteScript}\"",
                     UseShellExecute = true
                 });
@@ -146,7 +148,7 @@ public partial class SshDialog : Window
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "cmd.exe",
+                    FileName = File.Exists(cmdPath) ? cmdPath : "cmd.exe",
                     Arguments = $"/k ssh -t {user}@{ip} \"{remoteScript}\"",
                     UseShellExecute = true
                 });

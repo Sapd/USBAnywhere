@@ -634,15 +634,34 @@ public partial class MainWindow : Window
 
         var connectedDevices = await _usbip.GetConnectedDevicesAsync();
 
-        // Match exact ServerIP AND BusId first so multi-device servers disconnect the right port
+        // 1. Match exact ServerIP AND BusId first so multi-device servers disconnect the right port
         var portDevice = connectedDevices.FirstOrDefault(d =>
-            (d.ServerIP.Contains(connectedDevice.ServerIP, StringComparison.OrdinalIgnoreCase) ||
-             connectedDevice.ServerIP.Contains(d.ServerIP, StringComparison.OrdinalIgnoreCase)) &&
+            string.Equals(d.ServerIP?.Trim(), connectedDevice.ServerIP?.Trim(), StringComparison.OrdinalIgnoreCase) &&
             !string.IsNullOrEmpty(d.BusId) &&
-            string.Equals(d.BusId, connectedDevice.BusId, StringComparison.OrdinalIgnoreCase))
-            ?? connectedDevices.FirstOrDefault(d =>
-                d.ServerIP.Contains(connectedDevice.ServerIP, StringComparison.OrdinalIgnoreCase) ||
-                connectedDevice.ServerIP.Contains(d.ServerIP, StringComparison.OrdinalIgnoreCase));
+            string.Equals(d.BusId, connectedDevice.BusId, StringComparison.OrdinalIgnoreCase));
+
+        // 2. Safe fallback: if exact IP didn't match (e.g. hostname vs IP resolution difference),
+        // match BusId and ensure there is exactly one unique candidate before disconnecting
+        if (portDevice == null)
+        {
+            var candidates = connectedDevices.Where(d =>
+                !string.IsNullOrEmpty(d.BusId) &&
+                string.Equals(d.BusId, connectedDevice.BusId, StringComparison.OrdinalIgnoreCase) &&
+                (d.ServerIP.Contains(connectedDevice.ServerIP, StringComparison.OrdinalIgnoreCase) ||
+                 connectedDevice.ServerIP.Contains(d.ServerIP, StringComparison.OrdinalIgnoreCase))
+            ).ToList();
+
+            if (candidates.Count == 1)
+            {
+                portDevice = candidates[0];
+            }
+            else
+            {
+                // Fallback to exact ServerIP alone if unique
+                portDevice = connectedDevices.FirstOrDefault(d =>
+                    string.Equals(d.ServerIP?.Trim(), connectedDevice.ServerIP?.Trim(), StringComparison.OrdinalIgnoreCase));
+            }
+        }
 
         if (portDevice != null)
         {

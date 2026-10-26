@@ -128,14 +128,14 @@ ARM64 drivers are **test-signed**. See `README_ARM64.md` in the ZIP for instruct
 
 **Or run our 1-Line Plug & Play Installer on Linux / Raspberry Pi:**
 ```bash
-curl -sSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash
 ```
 > 💡 **100% Plug & Play (Like VirtualHere!):** Installs `usbipd`, creates a `systemd` service, and adds a **`udev` hotplug rule** that **automatically exports any USB device as soon as you plug it into your Raspberry Pi/Linux server** — zero manual `usbip bind` commands required!
 
 ### 🐳 Docker / HomeLab / NAS Server (`docker-compose.yml`)
 Run a Plug & Play USB/IP server on **Unraid, TrueNAS, Synology, or Proxmox** using [`docker/docker-compose.yml`](docker/docker-compose.yml):
 ```bash
-git clone https://github.com/oscarlosu-lab/USBAnywhere.git && cd USBAnywhere/docker && docker compose up -d
+git clone --recursive https://github.com/oscarlosu-lab/USBAnywhere.git && cd USBAnywhere/docker && docker compose up -d
 ```
 
 ### 🎮 Moonlight / Sunshine / Playnite CLI Automation
