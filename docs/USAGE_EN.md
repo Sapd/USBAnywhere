@@ -1,4 +1,4 @@
-# 📖 USBAnywhere v3.0 User Manual
+# 📖 USBAnywhere v3.0.1 User Manual
 
 🌐 **Language / Idioma:** **English** | [Español](USAGE_ES.md)
 
@@ -162,5 +162,7 @@ When closing the application, shutting down Windows (`AutoDetachOnExit: true`), 
 
 - **[README.md](../README.md)** - Installation and main features
 - **[RASPBERRY_PI_SERVER_EN.md](RASPBERRY_PI_SERVER_EN.md)** - Setup server on Raspberry Pi / Linux
+- **[macOS Server Guide](https://github.com/oscarlosu-lab/USBAnywhere-Server/blob/main/docs/USAGE_MACOS_EN.md)** - Setup native server on Apple Mac (Apple Silicon & Intel)
+- **[Windows ARM64 Guide](README_ARM64.md)** - Test-signing instructions for Snapdragon X Elite / Surface Pro
 - **[VPN_INTERNET_EN.md](VPN_INTERNET_EN.md)** - Remote connection over Internet (Tailscale / ZeroTier / WireGuard)
 - **[CHANGELOG.md](../CHANGELOG.md)** - Complete version history
