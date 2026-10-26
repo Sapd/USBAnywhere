@@ -12,7 +12,7 @@ Transforma cualquier dispositivo Linux (o PC Windows) en un Hub USB Virtual de a
 [![CI Build & Tests](https://github.com/oscarlosu-lab/USBAnywhere/actions/workflows/ci.yml/badge.svg)](https://github.com/oscarlosu-lab/USBAnywhere/actions/workflows/ci.yml)
 [![GitHub Downloads](https://img.shields.io/github/downloads/oscarlosu-lab/USBAnywhere/total?style=flat-square&logo=github&color=blue)](https://github.com/oscarlosu-lab/USBAnywhere/releases)
 [![GitHub Stars](https://img.shields.io/github/stars/oscarlosu-lab/USBAnywhere?style=flat-square&logo=github&color=yellow)](https://github.com/oscarlosu-lab/USBAnywhere/stargazers)
-[![Licencia](https://img.shields.io/badge/licencia-Gratis%20Uso%20Personal%20y%20Gaming-blue?style=flat-square)](LICENSE)
+[![Licencia](https://img.shields.io/badge/Licencia-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20(x64%20%26%20ARM64)-lightgrey?style=flat-square&logo=windows)](https://github.com/oscarlosu-lab/USBAnywhere)
 [![Comunidad Reddit](https://img.shields.io/badge/Reddit-r%2FUsbAnywhere-FF4500?style=flat-square&logo=reddit&logoColor=white)](https://www.reddit.com/r/UsbAnywhere/)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Apoyar%20Proyecto-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/oscarlosu)
@@ -23,7 +23,7 @@ Transforma cualquier dispositivo Linux (o PC Windows) en un Hub USB Virtual de a
 
 | Característica | **USBAnywhere v3.0** | **VirtualHere** | **USB Network Gate** |
 | :--- | :---: | :---: | :---: |
-| **Precio y Licencia** | **100% Gratis para Uso Personal y Gaming** | 49,00 USD / Servidor | +159,00 USD |
+| **Precio y Licencia** | **100% Gratis y Código Abierto (GPLv3)** | 49,00 USD / Servidor | +159,00 USD |
 | **Dispositivos Simultáneos (Free)** | **♾️ Ilimitados** | ⚠️ Solo 1 dispositivo | ❌ Trial limitado |
 | **Instalación Servidor en 1-Click** | ✅ **Auto-Instalador SSH y `udev` Hotplug** | ❌ Manual por consola | ❌ Demonio privativo |
 | **Modos de Latencia de Red** | ✅ **Dual: Low-Latency WSK y Zero-Copy** | ⚙️ Genérico | ⚙️ Genérico |
@@ -171,9 +171,11 @@ USBAnywhere/
 
 ## 📄 Licencia
 
-> **USBAnywhere es gratuito para uso personal, educativo y gaming. La redistribución comercial, cambio de marca (rebranding) o venta de este software o sus derivados está estrictamente prohibida sin el consentimiento explícito por escrito del autor.**
+Este proyecto está bajo la licencia **GNU General Public License v3.0 (GPLv3)**.
 
-Consulta el archivo [LICENSE](LICENSE) para ver los términos y condiciones legales completos.
+> **USBAnywhere es 100% software libre y código abierto.** Eres libre de ejecutar, estudiar, compartir y modificar el software bajo los términos de la Licencia Pública General de GNU publicada por la Free Software Foundation.
+
+Consulta el archivo [LICENSE](LICENSE) para ver el texto completo de la licencia.
 
 ## 🔗 Ecosistema USBAnywhere
 
