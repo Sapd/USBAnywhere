@@ -2,7 +2,7 @@
 
 🌐 **Language / Idioma:** **English** | [Español](README_ES.md)
 
-This directory contains provisioning scripts and media automation tools for the USBAnywhere ecosystem.
+This directory contains provisioning scripts, control suites, and media automation tools for the USBAnywhere ecosystem.
 
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20Project-FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/oscarlosu)
@@ -11,19 +11,35 @@ This directory contains provisioning scripts and media automation tools for the 
 
 ## 📜 Script Index
 
-### 1. `install-server.sh` — 1-Click Linux / Raspberry Pi Server Installer
-Automated shell installer for Linux and Raspberry Pi OS (Debian/Ubuntu/Raspbian/Arch/Fedora).
-- Automatically loads `usbip_core` and `usbip_host` kernel modules.
-- Installs `usbip` userspace package.
-- Creates `/etc/systemd/system/usbipd.service` to run on boot.
-- Installs udev hotplug rule `/etc/udev/rules.d/99-usbip-autobind.rules` to auto-export any peripheral plugged into the host.
+### 1. `usbanywhere-ctl` — Unified Control Suite (macOS & Linux)
+Interactive Terminal User Interface (TUI) dashboard and CLI management tool with zero external dependencies.
+- **Interactive TUI Dashboard**: `usbanywhere-ctl` (or `usbanywhere-ctl dashboard`)
+- **System Doctor**: `usbanywhere-ctl doctor`
+- **Protocol Loopback Test**: `usbanywhere-ctl test`
+- **Service Control**: `sudo usbanywhere-ctl start|stop|restart|status`
+- **Device Management**: `usbanywhere-ctl list`, `sudo usbanywhere-ctl share <busid>`
 
-**1-Click Command**:
+### 2. `install-server-mac.sh` — 1-Click macOS Server Installer
+Automated installer for macOS (Apple Silicon M1-M4 & Intel x86_64).
+- Installs native Swift server daemon and LaunchDaemon service.
+- Installs `usbanywhere-ctl` to `/usr/local/bin/`.
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere/main/scripts/install-server.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere-Server/main/scripts/install-server-mac.sh | sudo bash
 ```
 
-### 2. Media & Video Generators
+### 3. `install-server-linux.sh` / `install-server.sh` — 1-Click Linux / Raspberry Pi Installer
+Automated installer for Linux distributions and Raspberry Pi OS (Debian/Ubuntu/Raspbian/Arch/Fedora).
+- Automatically loads `usbip_core` and `usbip_host` kernel modules.
+- Installs `usbip` userspace package and systemd daemon.
+- Configures udev hotplug auto-exporting rule.
+- Installs `usbanywhere-ctl` to `/usr/local/bin/`.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere-Server/main/scripts/install-server-linux.sh | sudo bash
+```
+
+### 4. Media & Video Generators
 Python automation utilities using MoviePy, Pillow, and ElevenLabs API for generating tutorials and visual walkthroughs:
 - `generate_laser_lightburn_video.py` — Generates high-resolution LightBurn laser engraver setup tutorials.
 - `generate_masterclass_video.py` — Produces the SimRacing / Flight Sim masterclass video.
