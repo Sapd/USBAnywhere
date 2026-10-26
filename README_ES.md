@@ -234,3 +234,11 @@ Si USBAnywhere te ha servido para tu simulador, streaming o taller maker sin cab
 | [USB/IP](https://www.kernel.org/doc/html/latest/usb/usbip_protocol.html) | **Linux Kernel** | Protocolo original USB/IP |
 | **USBAnywhere** | **SnakeFoxu** | GUI .NET 9 WPF, Auto-Setup SSH 1-Click, integración VPN, modos de latencia y documentación |
 
+
+## Servidor nativo para Mac
+
+El submódulo del servidor incluye el servicio Swift y la aplicación SwiftUI.
+Consulta la [guía de instalación para Mac](server-windows/src/USBAnywhere.Server.Mac/DISTRIBUTION.md).
+Los scripts de este repositorio delegan en esa misma implementación. Contribución
+nativa para Mac: [Denis Arnst (Sapd)](https://github.com/Sapd); proyecto USBAnywhere:
+[oscarlosu-lab (SnakeFoxu)](https://github.com/oscarlosu-lab).

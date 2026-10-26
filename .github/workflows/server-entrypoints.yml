@@ -1,0 +1,9 @@
+name: Server entrypoints
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  forwarding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check canonical server forwarding
+        run: python3 -m unittest discover -s tests -p test_server_entrypoints.py -v

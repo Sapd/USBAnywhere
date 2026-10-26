@@ -250,3 +250,11 @@ If USBAnywhere helped your sim rig, cloud gaming, or 3D printing setup, consider
 | [OctoWrt Fork](https://github.com/shivajiva101/OctoWrt) | **ShivaJiva** | Active OctoWrt maintenance. Updated releases for CrealityBox. |
 | [USB/IP](https://www.kernel.org/doc/html/latest/usb/usbip_protocol.html) | **Linux Kernel** | Original USB/IP protocol |
 | **USBAnywhere** | **SnakeFoxu** | .NET 9 WPF GUI, 1-Click SSH setup, VPN integration, latency modes & documentation |
+
+## Native Mac server
+
+The desktop-server submodule contains the native Swift service and SwiftUI app.
+Start with the [Mac installation guide](server-windows/src/USBAnywhere.Server.Mac/DISTRIBUTION.md).
+Root setup/control scripts delegate to that same implementation. Native Mac work:
+[Denis Arnst (Sapd)](https://github.com/Sapd); USBAnywhere project:
+[oscarlosu-lab (SnakeFoxu)](https://github.com/oscarlosu-lab).

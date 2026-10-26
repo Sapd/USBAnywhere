@@ -19,14 +19,26 @@ Panel interactivo con interfaz TUI para terminal y herramienta de gestión CLI s
 - **Gestión del Servicio**: `sudo usbanywhere-ctl start|stop|restart|status`
 - **Gestión de Dispositivos**: `usbanywhere-ctl list`, `sudo usbanywhere-ctl share <busid>`
 
-### 2. `install-server-mac.sh` — Instalador 1-Click para macOS
-Instalador automático para macOS (Apple Silicon M1-M4 e Intel x86_64).
-- Instala el demonio nativo en Swift y el servicio LaunchDaemon.
-- Instala `usbanywhere-ctl` en `/usr/local/bin/`.
+### 2. Instalación nativa para macOS
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/oscarlosu-lab/USBAnywhere-Server/main/scripts/install-server-mac.sh | sudo bash
+Arrastra USBAnywhere.app a Aplicaciones, ábrela y completa la configuración.
+La aplicación y el servicio Swift no necesitan Python; la CLI opcional requiere
+Python 3 y se instala junto con el servicio.
+
+Los scripts `install-server-mac.sh`, `uninstall-server-mac.sh` y `usbanywhere-ctl`
+de este repositorio delegan en `server-windows/scripts/`, la implementación única.
+
+```sh
+git submodule update --init server-windows
+server-windows/src/USBAnywhere.Server.Mac/build.sh
+sudo sh scripts/install-server-mac.sh IP_MAC IP_WINDOWS
+python3 scripts/usbanywhere-ctl status --json
 ```
+
+Añade dispositivos desde la aplicación. `share`, `unshare` y `reconnect` usan los
+mismos permisos e identidades. Solo iniciar/detener/reiniciar el servicio necesita
+sudo. En Mac, `test` verifica el control local; la prueba de red USB/IP debe
+realizarse desde un cliente autorizado. Consulta la [guía de Mac](../server-windows/src/USBAnywhere.Server.Mac/README.md).
 
 ### 3. `install-server-linux.sh` / `install-server.sh` — Instalador 1-Click para Linux y Raspberry Pi
 Instalador automático para distribuciones Linux y Raspberry Pi OS (Debian/Ubuntu/Raspbian/Arch/Fedora).
